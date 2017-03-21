@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rootview"
+    tools:context="com.example.sunzh.gradleapplication.MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="hello world!"
+        android:textSize="50sp"
+        android:background="#00f"
+        />
+    <TextView
+        android:id="@+id/test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="#ddd"
+        android:padding="5dp"
+        android:text="开启home监听" />
+
+    <TextView
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/test"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp"
+        android:background="#ddd"
+        android:padding="5dp"
+        android:text="关闭home监听" />
+</RelativeLayout>
