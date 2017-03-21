@@ -9,6 +9,8 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.lang.reflect.Method;
 
@@ -194,5 +196,35 @@ public class DeviceUtils {
         }
 
         return dpi > display.getHeight();//获取屏幕尺寸，不包括虚拟功能高度
+    }
+
+
+    /**
+     * 设置状态栏颜色
+     * @param activity
+     * @param contentLayout
+     * @param color
+     */
+    public static void setupStatusBarView(Activity activity, ViewGroup contentLayout, int color) {
+
+        View mStatusBarView = null;
+
+        View statusBarView = new View(activity);
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, getStatusBarHeight(activity));
+        contentLayout.addView(statusBarView, lp);
+
+        mStatusBarView = statusBarView;
+
+
+        mStatusBarView.setBackgroundColor(color);
+    }
+
+    /**
+     * 获得状态栏高度
+     */
+    public static int getStatusBarHeight(Context context) {
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        return context.getResources().getDimensionPixelSize(resourceId);
     }
 }
