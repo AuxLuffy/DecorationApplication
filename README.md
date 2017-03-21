@@ -13,6 +13,6 @@ decoration测试
 #### 小结
 使用 `SYSTEM_UI_FLAG_IMMERSIVE` + `handler` 来处理延时消失，让用户体验可以更沉浸
 
-![](https://raw.githubusercontent.com/AuxLuffy/DecorationApplication/master/app/src/main/res/drawable/immersivebefore4_4.jpg "4.4之前的全屏显示所需要的flag")
+![](immersivebefore4_4.jpg "4.4之前的全屏显示所需要的flag")
 
 ![](b.jpg "4.4之后添加的新flag")
