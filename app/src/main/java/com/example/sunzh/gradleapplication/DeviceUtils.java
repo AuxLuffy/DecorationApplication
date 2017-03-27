@@ -5,14 +5,18 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.lang.reflect.Method;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by sunzh on 2017/3/14.
@@ -176,6 +180,7 @@ public class DeviceUtils {
     /**
      * 通过获取不同状态的屏幕高度对比判断是否有NavigationBar
      * <p>屏幕原始高度（通过反射获取的）和不包括虚拟功能键的高度相比大于0说明有导航栏</p>
+     *
      * @param context
      * @return
      */
@@ -201,6 +206,7 @@ public class DeviceUtils {
 
     /**
      * 设置状态栏颜色
+     *
      * @param activity
      * @param contentLayout
      * @param color
@@ -226,5 +232,49 @@ public class DeviceUtils {
     public static int getStatusBarHeight(Context context) {
         int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
         return context.getResources().getDimensionPixelSize(resourceId);
+    }
+
+
+    /**
+     * Detects and toggles immersive mode (also known as "hidey bar" mode).
+     * 切换是否隐藏导航栏（异或运算切换）异或0保留，异或1取反，即可以取反功能位（逻辑为1的位），其他位保留
+     */
+    public static void toggleHideyBar(Activity a) {
+
+        // The UI options currently enabled are represented by a bitfield.
+        // getSystemUiVisibility() gives us that bitfield.
+        int uiOptions = a.getWindow().getDecorView().getSystemUiVisibility();
+        int newUiOptions = uiOptions;
+        boolean isImmersiveModeEnabled =
+                ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);//神逻辑，不错不错，判断是否开启了沉浸模式
+        if (isImmersiveModeEnabled) {
+            Log.i(TAG, "Turning immersive mode mode off. ");
+        } else {
+            Log.i(TAG, "Turning immersive mode mode on.");
+        }
+
+        // Navigation bar hiding:  Backwards compatible to ICS.
+        if (Build.VERSION.SDK_INT >= 14) {
+            newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;//取反功能位（逻辑为1的位），其他位保留
+        }
+
+        // Status bar hiding: Backwards compatible to Jellybean
+        if (Build.VERSION.SDK_INT >= 16) {
+            newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;//取反功能位（逻辑为1的位），其他位保留
+        }
+
+        // Immersive mode: Backward compatible to KitKat.
+        // Note that this flag doesn't do anything by itself, it only augments the behavior
+        // of HIDE_NAVIGATION and FLAG_FULLSCREEN.  For the purposes of this sample
+        // all three flags are being toggled together.
+        // Note that there are two immersive mode UI flags, one of which is referred to as "sticky".
+        // Sticky immersive mode differs in that it makes the navigation and status bars
+        // semi-transparent, and the UI flag does not get cleared when the user interacts with
+        // the screen.
+        if (Build.VERSION.SDK_INT >= 18) {
+            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;//取反功能位（逻辑为1的位），其他位保留
+        }
+
+        a.getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
     }
 }
