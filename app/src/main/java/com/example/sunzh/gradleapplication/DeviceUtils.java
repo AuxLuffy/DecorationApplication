@@ -277,4 +277,7 @@ public class DeviceUtils {
 
         a.getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
     }
+
+
+
 }

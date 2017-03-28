@@ -7,6 +7,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +16,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.sunzh.gradleapplication.testdialogfragment.EditNameDialogFragment;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -26,7 +30,7 @@ import java.util.WeakHashMap;
 /**
  * 测试系统decoration ui及弱引用
  */
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, EditNameDialogFragment.LoginInputListener {
     /**
      * 单个数据大小为1
      */
@@ -83,8 +87,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             contentChild.setFitsSystemWindows(true);
         }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-
-
     }
 
 
@@ -192,10 +194,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.cancel:
 //                hideAct();
-                nextActivity();
+//                nextActivity();
+                showEditDialog();
 //                stopService(new Intent(MainActivity.this, HomeService.class));
                 break;
         }
+    }
+
+    private void showEditDialog() {
+        EditNameDialogFragment newFragment = new EditNameDialogFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        boolean mIsLargeLayout = getResources().getBoolean(R.bool.large_layout);
+
+        if (mIsLargeLayout) {
+            newFragment.show(fragmentManager, "EditNameDialog");
+        } else {
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            transaction.replace(R.id.container, newFragment).commit();
+        }
+
+//        new AlertDialog.Builder(this)
+//                .setTitle("Sign in")
+//                .setView(this.getLayoutInflater().inflate(R.layout.fragment_login_dialog,null))
+//                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                    }
+//                })
+//                .setNegativeButton("取消", null)
+//                .show();
     }
 
     @Override
@@ -281,5 +310,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         thread.start();
 
         Toast.makeText(MainActivity.this, "map.size：" + map.size() /*+ "；回收了" + i + "次"*/, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoginInputComplete(String username, String password) {
+        Toast.makeText(MainActivity.this, "登录成功，用户名：" + username + "，密码：" + password, Toast.LENGTH_SHORT).show();
     }
 }
